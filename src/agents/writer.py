@@ -1,4 +1,4 @@
-from langchain_openai import ChatOpenAI
+from langchain_groq import ChatGroq
 from src.state import AgentState
 
 WRITER_SYSTEM_PROMPT = """You are a health science writer specializing in evidence-based reports for general audiences.
@@ -46,7 +46,7 @@ Rules:
 
 
 def writer_node(state: AgentState) -> AgentState:
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3)
+    llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0.3)
 
     revision_context = ""
     if state.get("review_feedback") and state.get("revision_count", 0) > 0:

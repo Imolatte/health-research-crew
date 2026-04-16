@@ -51,8 +51,9 @@ python -m src.main "Is magnesium effective for improving sleep quality?"
 
 | Key | Where to get | Free tier |
 |-----|-------------|-----------|
-| `OPENAI_API_KEY` | platform.openai.com | Pay-per-use |
-| `TAVILY_API_KEY` | app.tavily.com | 1,000 req/month free |
+| `GROQ_API_KEY` | console.groq.com | Free, no credit card required |
+
+DuckDuckGo search requires no key.
 
 ## Architecture Decisions
 
@@ -71,8 +72,8 @@ Using different search intents produces better evidence coverage than a single g
 ### TypedDict state contract
 `AgentState` is a typed contract shared across all agents. Any agent can read any field; each agent updates only its own fields. This makes the data flow explicit and catches schema mismatches at development time.
 
-### gpt-4o-mini
-Sufficient capability for structured output generation and peer review at low cost. The structured prompts with explicit output format constraints compensate for using a smaller model.
+### llama-3.3-70b-versatile via Groq
+Free-tier model with strong instruction following. Groq's inference speed (hundreds of tokens/sec) makes multi-agent runs feel near-instant. The structured prompts with explicit JSON output format compensate for any differences vs. GPT-4o.
 
 ## Example Output
 

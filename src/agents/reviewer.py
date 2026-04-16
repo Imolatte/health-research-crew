@@ -1,6 +1,6 @@
 import json
 import re
-from langchain_openai import ChatOpenAI
+from langchain_groq import ChatGroq
 from src.state import AgentState
 
 REVIEWER_SYSTEM_PROMPT = """You are a peer reviewer for health science content - rigorous, fair, evidence-focused.
@@ -42,7 +42,7 @@ Set needs_revision=true only if score < 7."""
 
 
 def reviewer_node(state: AgentState) -> AgentState:
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0)
 
     messages = [
         {"role": "system", "content": REVIEWER_SYSTEM_PROMPT},

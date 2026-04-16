@@ -1,4 +1,4 @@
-from langchain_openai import ChatOpenAI
+from langchain_groq import ChatGroq
 from src.state import AgentState
 from src.tools.search import search_health_topic, verify_claim
 
@@ -36,7 +36,7 @@ Be precise, cite specific studies where possible. Do not make claims beyond what
 
 
 def researcher_node(state: AgentState) -> AgentState:
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0)
 
     messages = [
         {"role": "system", "content": RESEARCHER_SYSTEM_PROMPT},
