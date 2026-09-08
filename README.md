@@ -2,13 +2,15 @@
 
 A LangGraph multi-agent system that researches health supplement claims and produces evidence-based reports with automatic quality review.
 
+> **Status: work in progress.** The graph runs end to end on the free stack (Groq + DuckDuckGo), but evaluation, tests and citation handling are not finished yet.
+
 ## Graph Architecture
 
 ```
 START
   |
   v
-[Researcher] -- searches PubMed/clinical studies via Tavily
+[Researcher] -- searches PubMed/clinical studies via web search
   |
   v
 [Writer] -- structures findings into evidence-based report
@@ -41,7 +43,7 @@ pip install -e .
 
 # 2. Set up API keys
 cp .env.example .env
-# Edit .env: add OPENAI_API_KEY and TAVILY_API_KEY
+# Edit .env: add GROQ_API_KEY (free, no credit card)
 
 # 3. Run
 python -m src.main "Is magnesium effective for improving sleep quality?"
@@ -63,9 +65,9 @@ LangGraph gives explicit control over the state machine - every node, edge, and 
 ### Conditional edge (revision loop)
 The reviewer node returns a structured JSON with `quality_score` and `needs_revision`. The conditional edge routes back to the writer if score < 7, with a hard cap of 1 revision to prevent infinite loops. This mimics real peer-review workflows without unbounded cost.
 
-### Two Tavily tools with different intent
-- `search_health_topic` - broad research (5 results, looks for clinical trials and PubMed)
-- `verify_claim` - targeted fact-check (3 results, looks for systematic reviews and meta-analyses)
+### Two search tools with different intent
+- `search_health_topic` - broad research, biased towards clinical trials and PubMed
+- `verify_claim` - targeted fact-check, biased towards systematic reviews and meta-analyses
 
 Using different search intents produces better evidence coverage than a single generic search.
 
@@ -88,11 +90,11 @@ health-research-crew/
 │   ├── graph.py          # LangGraph graph definition + conditional routing
 │   ├── main.py           # Entry point
 │   ├── agents/
-│   │   ├── researcher.py # Evidence gathering agent (uses Tavily tools)
+│   │   ├── researcher.py # Evidence gathering agent (uses the search tools)
 │   │   ├── writer.py     # Report writing agent
 │   │   └── reviewer.py   # Peer review agent (returns structured JSON)
 │   └── tools/
-│       └── search.py     # Tavily search tools
+│       └── search.py     # DuckDuckGo search tools
 └── examples/
     └── output_example.md # Sample run output
 ```
